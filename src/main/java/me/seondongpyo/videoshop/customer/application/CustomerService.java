@@ -1,6 +1,8 @@
 package me.seondongpyo.videoshop.customer.application;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,10 @@ public class CustomerService {
 
 	public Customer create(Customer customer) {
 		return customerRepository.save(customer);
+	}
+
+	public Optional<Customer> findById(UUID id) {
+		return customerRepository.findById(id);
 	}
 
 	public List<Customer> findAll() {
