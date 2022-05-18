@@ -2,9 +2,11 @@ package me.seondongpyo.videoshop.customer.ui;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,11 @@ public class CustomerRestController {
 		Customer created = customerService.create(customer);
 		return ResponseEntity.created(URI.create("/customers/" + created.getId()))
 				.body(created);
+	}
+
+	@GetMapping("/{customerId}")
+	public ResponseEntity<Customer> findById(@PathVariable UUID customerId) {
+		return ResponseEntity.ok(customerService.findById(customerId));
 	}
 
 	@GetMapping

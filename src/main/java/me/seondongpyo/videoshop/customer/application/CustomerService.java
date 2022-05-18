@@ -1,15 +1,14 @@
 package me.seondongpyo.videoshop.customer.application;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import me.seondongpyo.videoshop.customer.domain.Customer;
 import me.seondongpyo.videoshop.customer.domain.CustomerRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -23,8 +22,9 @@ public class CustomerService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<Customer> findById(UUID id) {
-		return customerRepository.findById(id);
+	public Customer findById(UUID id) {
+		return customerRepository.findById(id)
+			.orElseThrow(IllegalArgumentException::new);
 	}
 
 	@Transactional(readOnly = true)
