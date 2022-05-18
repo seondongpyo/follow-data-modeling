@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import me.seondongpyo.videoshop.customer.domain.Customer;
 import me.seondongpyo.videoshop.customer.domain.CustomerRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-
+@Transactional
 @Service
 public class CustomerService {
 
@@ -21,10 +22,12 @@ public class CustomerService {
 		return customerRepository.save(customer);
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<Customer> findById(UUID id) {
 		return customerRepository.findById(id);
 	}
 
+	@Transactional(readOnly = true)
 	public List<Customer> findAll() {
 		return customerRepository.findAll();
 	}
