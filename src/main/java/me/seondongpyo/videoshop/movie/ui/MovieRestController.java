@@ -26,7 +26,7 @@ public class MovieRestController {
 	@PostMapping
 	public ResponseEntity<Movie> create(@RequestBody Movie movie) {
 		Movie created = movieService.create(movie);
-		return ResponseEntity.created(URI.create("/movies/" + movie.getId()))
+		return ResponseEntity.created(URI.create("/movies/" + created.getId()))
 				.body(created);
 	}
 
