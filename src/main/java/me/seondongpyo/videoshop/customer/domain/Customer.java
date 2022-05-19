@@ -23,5 +23,6 @@ public class Customer {
 
 	private String address;
 
+	@Column(nullable = false)
 	private Long membershipNumber;
 }
