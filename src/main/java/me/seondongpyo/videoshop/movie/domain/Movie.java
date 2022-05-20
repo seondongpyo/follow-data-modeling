@@ -1,15 +1,11 @@
 package me.seondongpyo.videoshop.movie.domain;
 
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-
 import lombok.Getter;
 import lombok.Setter;
+import me.seondongpyo.videoshop.tape.domain.Tape;
+
+import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,6 +15,9 @@ public class Movie {
 	@Id
 	@Column(name = "id", columnDefinition = "varbinary(16)")
 	private UUID id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Tape tape;
 
 	private String title;
 

@@ -2,10 +2,9 @@ package me.seondongpyo.videoshop.customer.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.seondongpyo.videoshop.tape.domain.Tape;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Getter
@@ -17,6 +16,9 @@ public class Customer {
 	@Setter
 	private UUID id;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Tape tape;
+
 	private String name;
 
 	private String phoneNumber;
@@ -24,5 +26,5 @@ public class Customer {
 	private String address;
 
 	@Column(nullable = false)
-	private Long membershipNumber;
+	private UUID membershipId;
 }
