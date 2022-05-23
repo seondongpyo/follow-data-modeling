@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie List</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>ID</th>
+        <th>제목</th>
+        <th>장르</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="movie, movieStat : ${movies}">
+        <td th:text="${movieStat.count}">번호</td>
+        <td th:text="${movie.id}">ID</td>
+        <td th:text="${movie.title}">제목</td>
+        <td th:text="${movie.genre}">장르</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
