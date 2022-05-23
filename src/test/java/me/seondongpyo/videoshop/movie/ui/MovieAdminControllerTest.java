@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import me.seondongpyo.videoshop.movie.domain.Genre;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class MovieAdminControllerTest {
@@ -24,6 +26,16 @@ class MovieAdminControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("movies"))
 			.andExpect(view().name("admin/movie/list"));
+	}
+
+	@DisplayName("새로운 영화를 등록한다.")
+	@Test
+	void add() throws Exception {
+		mvc.perform(post("/admin/movies")
+				.param("title", "new movie")
+				.param("genre", Genre.COMEDY.name()))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("/admin/movies"));
 	}
 
 }
