@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a new movie</title>
+</head>
+<body>
+<h2>영화 등록</h2>
+<form action="#" method="post" th:action="@{/admin/movies}">
+    <div>
+        <label for="title">제목 : </label>
+        <input type="text" name="title" id="title" placeholder="제목">
+    </div>
+    <div>
+        <label for="genre">장르 :
+            <select name="genre" id="genre">
+                <option th:each="genre : ${genres}" th:text="${genre.description}" th:value="${genre}"></option>
+            </select>
+        </label>
+    </div>
+    <br>
+    <button type="submit">등록</button>
+    <a href="/admin/movies">취소</a>
+</form>
+</body>
+</html>

@@ -5,6 +5,8 @@
     <title>Movie List</title>
 </head>
 <body>
+<h2>영화 목록</h2>
+<a href="/admin/movies/new">추가</a>
 <table>
     <thead>
     <tr>
@@ -19,7 +21,7 @@
         <td th:text="${movieStat.count}">번호</td>
         <td th:text="${movie.id}">ID</td>
         <td th:text="${movie.title}">제목</td>
-        <td th:text="${movie.genre}">장르</td>
+        <td th:text="${movie.genre.description}">장르</td>
     </tr>
     </tbody>
 </table>

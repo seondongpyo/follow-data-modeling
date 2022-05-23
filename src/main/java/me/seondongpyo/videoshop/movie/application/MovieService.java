@@ -19,6 +19,7 @@ public class MovieService {
 	private final MovieRepository movieRepository;
 
 	public Movie create(Movie movie) {
+		movie.setId(UUID.randomUUID());
 		return movieRepository.save(movie);
 	}
 
