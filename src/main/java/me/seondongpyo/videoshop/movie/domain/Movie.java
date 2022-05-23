@@ -16,9 +16,6 @@ public class Movie {
 	@Column(name = "id", columnDefinition = "varbinary(16)")
 	private UUID id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Tape tape;
-
 	private String title;
 
 	@Enumerated(EnumType.STRING)
