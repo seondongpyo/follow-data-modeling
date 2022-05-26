@@ -8,12 +8,12 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 public class Customer {
 
 	@Id
 	@Column(name = "id", columnDefinition = "varbinary(16)")
-	@Setter
 	private UUID id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
