@@ -2,7 +2,6 @@ package me.seondongpyo.videoshop.movie.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.seondongpyo.videoshop.tape.domain.Tape;
 
 import javax.persistence.*;
 import java.util.UUID;
