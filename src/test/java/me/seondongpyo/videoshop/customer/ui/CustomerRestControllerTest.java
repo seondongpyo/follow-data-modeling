@@ -42,7 +42,8 @@ class CustomerRestControllerTest {
         mvc.perform(post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andExpect(content().json(objectMapper.writeValueAsString(customer)));
     }
 
     @DisplayName("특정 고객을 조회한다.")
