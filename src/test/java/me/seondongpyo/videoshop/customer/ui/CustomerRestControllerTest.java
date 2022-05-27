@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 class CustomerRestControllerTest {
 
@@ -59,5 +61,25 @@ class CustomerRestControllerTest {
         mvc.perform(get("/customers/{id}", created.getId()))
             .andExpect(status().isOk())
             .andExpect(content().json(objectMapper.writeValueAsString(created)));
+    }
+
+    @DisplayName("고객 목록을 조회한다.")
+    @Test
+    void findAll() throws Exception {
+        Customer customer1 = new Customer();
+        customer1.setId(UUID.randomUUID());
+        customer1.setMembershipId(UUID.randomUUID());
+        customerService.create(customer1);
+
+        Customer customer2 = new Customer();
+        customer2.setId(UUID.randomUUID());
+        customer2.setMembershipId(UUID.randomUUID());
+        customerService.create(customer2);
+
+        List<Customer> customers = List.of(customer1, customer2);
+
+        mvc.perform(get("/customers"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(objectMapper.writeValueAsString(customers)));
     }
 }
