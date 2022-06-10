@@ -7,8 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -23,5 +26,6 @@ public class Actor {
 
 	private String realName;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
 }
