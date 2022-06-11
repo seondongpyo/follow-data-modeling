@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("/tapes")
@@ -18,19 +19,24 @@ public class TapeRestController {
     private final TapeService tapeService;
 
     @PostMapping
-    public ResponseEntity<Tape> create(@RequestBody Tape tape) {
-        Tape created = tapeService.create(tape);
-        return ResponseEntity.created(URI.create("/tapes/" + created.getId()))
-                .body(created);
+    public ResponseEntity<TapeResponseDTO> create(@RequestBody TapeRequestDTO request) {
+        Tape tape = tapeService.create(request.getMovieId(), request.getType());
+        return ResponseEntity.created(URI.create("/tapes/" + tape.getId()))
+                .body(new TapeResponseDTO(tape));
     }
 
     @GetMapping("/{tapeId}")
-    public ResponseEntity<Tape> findById(@PathVariable UUID tapeId) {
-        return ResponseEntity.ok(tapeService.findById(tapeId));
+    public ResponseEntity<TapeResponseDTO> findById(@PathVariable UUID tapeId) {
+        Tape tape = tapeService.findById(tapeId);
+        return ResponseEntity.ok(new TapeResponseDTO(tape));
     }
 
     @GetMapping
-    public ResponseEntity<List<Tape>> findAll() {
-        return ResponseEntity.ok(tapeService.findAll());
+    public ResponseEntity<List<TapeResponseDTO>> findAll() {
+        List<TapeResponseDTO> tapes = tapeService.findAll()
+            .stream()
+            .map(TapeResponseDTO::new)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(tapes);
     }
 }
