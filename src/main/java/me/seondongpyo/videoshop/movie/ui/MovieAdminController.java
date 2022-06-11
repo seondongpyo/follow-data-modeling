@@ -7,6 +7,7 @@ import me.seondongpyo.videoshop.movie.domain.Movie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,5 +55,22 @@ public class MovieAdminController {
 	public String add(@ModelAttribute MovieRequestDTO request) {
 		movieService.create(request.toEntity());
 		return "redirect:/admin/movies";
+	}
+
+	@GetMapping("/{id}/edit")
+	public String edit(@PathVariable UUID id, Model model) {
+		Movie movie = movieService.findById(id);
+		model.addAttribute("movie", new MovieResponseDTO(movie));
+		return "admin/movie/edit";
+	}
+
+	@PostMapping("/{id}/edit")
+	public String edit(@PathVariable UUID id,
+					   @ModelAttribute MovieRequestDTO request,
+					   RedirectAttributes redirectAttributes) {
+
+		movieService.update(id, request);
+		redirectAttributes.addAttribute("id", id);
+		return "redirect:/admin/movies/{id}";
 	}
 }
