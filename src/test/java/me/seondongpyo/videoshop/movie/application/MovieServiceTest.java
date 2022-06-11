@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.UUID;
 
+import me.seondongpyo.videoshop.movie.ui.MovieRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,17 @@ class MovieServiceTest {
 		movieRepository.save(movie("The Last Dance", Genre.DOCUMENTARY));
 		List<Movie> movies = movieService.findAll();
 		assertThat(movies).hasSize(2);
+	}
+
+	@DisplayName("영화 정보를 수정한다.")
+	@Test
+	void update() {
+		Movie avengers = movieRepository.save(movie("The Avengers", Genre.ACTION));
+		movieService.update(avengers.getId(), new MovieRequestDTO("3 idiots", Genre.COMEDY));
+
+		Movie found = movieService.findById(avengers.getId());
+		assertThat(found.getTitle()).isEqualTo("3 idiots");
+		assertThat(found.getGenre()).isEqualTo(Genre.COMEDY);
 	}
 
 	private Movie movie(String title, Genre genre) {

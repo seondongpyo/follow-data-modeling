@@ -40,6 +40,7 @@ class MovieAdminControllerTest {
 
 		given(movieService.findAll()).willReturn(List.of(threeIdiots, theRoundup));
 		given(movieService.findById(threeIdiots.getId())).willReturn(threeIdiots);
+		given(movieService.findById(theRoundup.getId())).willReturn(theRoundup);
 	}
 
 	@DisplayName("영화 목록을 조회한다.")
@@ -77,6 +78,26 @@ class MovieAdminControllerTest {
 		mvc.perform(get("/admin/movies/new"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("admin/movie/new"));
+	}
+
+	@DisplayName("영화 수정 페이지로 이동한다.")
+	@Test
+	void editPage() throws Exception {
+		mvc.perform(get("/admin/movies/{id}/edit", theRoundup.getId()))
+			.andExpect(status().isOk())
+			.andExpect(view().name("admin/movie/edit"))
+			.andExpect(model().attribute("movie", new MovieResponseDTO(theRoundup)));
+	}
+
+	@DisplayName("영화 정보를 수정한다.")
+	@Test
+	void edit() throws Exception {
+		mvc.perform(post("/admin/movies/{id}/edit", threeIdiots.getId())
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("title", "쥬라기 월드")
+				.param("genre", Genre.ACTION.name()))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("/admin/movies/" + threeIdiots.getId()));
 	}
 
 	private Movie movie(String title, Genre genre) {
