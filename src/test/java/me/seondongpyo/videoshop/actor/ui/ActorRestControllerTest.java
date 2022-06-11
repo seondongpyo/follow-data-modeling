@@ -40,52 +40,55 @@ class ActorRestControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+    private Actor actorA;
+    private Actor actorB;
+
     @BeforeEach
     void setup() {
         mvc = MockMvcBuilders.webAppContextSetup(wac)
             .addFilter(new CharacterEncodingFilter("UTF-8", true))
             .build();
+
+        actorA = actor("aa", "AA");
+        actorB = actor("bb", "BB");
+
+        given(actorService.create(any(Actor.class))).willReturn(actorA);
+        given(actorService.findById(actorA.getId())).willReturn(actorA);
+        given(actorService.findById(actorB.getId())).willReturn(actorB);
+        given(actorService.findAll()).willReturn(List.of(actorA, actorB));
     }
 
     @DisplayName("새로운 배우를 등록한다.")
     @Test
     void create() throws Exception {
-        String realName = "Don Lee";
-        String stageName = "마동석";
-
-        given(actorService.create(any(Actor.class))).willReturn(actor(realName, stageName));
+        ActorRequestDTO request = new ActorRequestDTO(actorA.getStageName(), actorA.getRealName(), actorA.getBirthDate());
 
         mvc.perform(post("/actors")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"realName\":\"" + realName + "\", \"stageName\":\"" + stageName + "\"}"))
+                .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.realName").value(realName))
-            .andExpect(jsonPath("$.stageName").value(stageName));
+            .andExpect(jsonPath("$.realName").value(actorA.getRealName()))
+            .andExpect(jsonPath("$.stageName").value(actorA.getStageName()));
     }
 
     @DisplayName("특정 배우를 조회한다.")
     @Test
     void findById() throws Exception {
-        Actor actor = actor("Don Lee", "마동석");
+        ActorResponseDTO response = new ActorResponseDTO(actorA);
 
-        given(actorService.findById(any(UUID.class))).willReturn(actor);
-
-        mvc.perform(get("/actors/{id}", actor.getId()))
+        mvc.perform(get("/actors/{id}", actorA.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().string(objectMapper.writeValueAsString(actor)));
+            .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 
     @DisplayName("배우 목록을 조회한다.")
     @Test
     void findAll() throws Exception {
-        Actor actorA = actor("AA", "aa");
-        Actor actorB = actor("BB", "bb");
-
-        given(actorService.findAll()).willReturn(List.of(actorA, actorB));
+        List<ActorResponseDTO> response = List.of(new ActorResponseDTO(actorA), new ActorResponseDTO(actorB));
 
         mvc.perform(get("/actors"))
             .andExpect(status().isOk())
-            .andExpect(content().string(objectMapper.writeValueAsString(List.of(actorA, actorB))));
+            .andExpect(content().string(objectMapper.writeValueAsString(response)));
     }
 
     private Actor actor(String realName, String stageName) {

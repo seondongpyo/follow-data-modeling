@@ -26,6 +26,5 @@ public class Actor {
 
 	private String realName;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
 }
