@@ -3,10 +3,12 @@ package me.seondongpyo.videoshop.movie.ui;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import me.seondongpyo.videoshop.movie.domain.Genre;
 import me.seondongpyo.videoshop.movie.domain.Movie;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieRequestDTO {

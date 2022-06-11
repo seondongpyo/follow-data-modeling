@@ -1,20 +1,17 @@
 package me.seondongpyo.videoshop.movie.ui;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import lombok.RequiredArgsConstructor;
 import me.seondongpyo.videoshop.movie.application.MovieService;
 import me.seondongpyo.videoshop.movie.domain.Genre;
 import me.seondongpyo.videoshop.movie.domain.Movie;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("/admin/movies")
@@ -23,25 +20,39 @@ public class MovieAdminController {
 
 	private final MovieService movieService;
 
+	@ModelAttribute("genres")
+	public List<Genre> genres() {
+		return Arrays.stream(Genre.values())
+			.collect(Collectors.toList());
+	}
+
 	@GetMapping
 	public String findAll(Model model) {
-		List<Movie> movies = movieService.findAll();
+		List<MovieResponseDTO> movies = movieService.findAll()
+			.stream()
+			.map(MovieResponseDTO::new)
+			.collect(Collectors.toList());
+
 		model.addAttribute("movies", movies);
 		return "admin/movie/list";
 	}
 
+	@GetMapping("/{id}")
+	public String findById(@PathVariable UUID id, Model model) {
+		Movie movie = movieService.findById(id);
+		model.addAttribute("movie", new MovieResponseDTO(movie));
+		return "admin/movie/detail";
+	}
+
 	@GetMapping("/new")
 	public String addForm(Model model) {
-		List<Genre> genres = Arrays.stream(Genre.values())
-			.collect(Collectors.toList());
-		model.addAttribute("movie", new Movie());
-		model.addAttribute("genres", genres);
+		model.addAttribute("movie", new MovieRequestDTO());
 		return "admin/movie/new";
 	}
 
 	@PostMapping
-	public String add(@ModelAttribute Movie movie) {
-		movieService.create(movie);
+	public String add(@ModelAttribute MovieRequestDTO request) {
+		movieService.create(request.toEntity());
 		return "redirect:/admin/movies";
 	}
 }

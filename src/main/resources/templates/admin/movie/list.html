@@ -20,7 +20,10 @@
     <tr th:each="movie, movieStat : ${movies}">
         <td th:text="${movieStat.count}">번호</td>
         <td th:text="${movie.id}">ID</td>
-        <td th:text="${movie.title}">제목</td>
+        <td>
+            <a th:href="@{/admin/movies/{id}(id=${movie.id})}"
+               th:text="${movie.title}">제목</a>
+        </td>
         <td th:text="${movie.genre.description}">장르</td>
     </tr>
     </tbody>
