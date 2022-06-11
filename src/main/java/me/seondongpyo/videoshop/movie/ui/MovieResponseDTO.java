@@ -1,5 +1,6 @@
 package me.seondongpyo.videoshop.movie.ui;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.seondongpyo.videoshop.movie.domain.Genre;
 import me.seondongpyo.videoshop.movie.domain.Movie;
@@ -7,6 +8,7 @@ import me.seondongpyo.videoshop.movie.domain.Movie;
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode
 public class MovieResponseDTO {
 
     private final UUID id;

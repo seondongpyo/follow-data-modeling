@@ -39,7 +39,7 @@ public class MovieAdminController {
 	}
 
 	@GetMapping("/{id}")
-	public String findById(@PathVariable UUID id, Model model) {
+	public String detail(@PathVariable UUID id, Model model) {
 		Movie movie = movieService.findById(id);
 		model.addAttribute("movie", new MovieResponseDTO(movie));
 		return "admin/movie/detail";
