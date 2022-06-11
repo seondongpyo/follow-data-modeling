@@ -71,6 +71,14 @@ class MovieAdminControllerTest {
 			.andExpect(model().attribute("movie", new MovieResponseDTO(threeIdiots)));
 	}
 
+	@DisplayName("영화 등록 페이지로 이동한다.")
+	@Test
+	void addPage() throws Exception {
+		mvc.perform(get("/admin/movies/new"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("admin/movie/new"));
+	}
+
 	private Movie movie(String title, Genre genre) {
 		Movie movie = new Movie();
 		movie.setId(UUID.randomUUID());
