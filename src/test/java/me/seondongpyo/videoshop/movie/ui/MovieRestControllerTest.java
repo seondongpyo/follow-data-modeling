@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,7 +66,7 @@ class MovieRestControllerTest {
     @DisplayName("새로운 영화를 등록한다.")
     @Test
     void create() throws Exception {
-        MovieRequestDTO request = new MovieRequestDTO(avengers.getTitle(), avengers.getGenre());
+        MovieRequestDTO request = new MovieRequestDTO(avengers.getTitle(), avengers.getGenre(), Collections.emptyList());
 
         mvc.perform(MockMvcRequestBuilders.post("/movies")
                 .contentType(MediaType.APPLICATION_JSON)

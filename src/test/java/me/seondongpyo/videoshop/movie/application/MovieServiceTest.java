@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.UUID;
 
+import me.seondongpyo.videoshop.actor.application.InMemoryActorRepository;
+import me.seondongpyo.videoshop.actor.domain.ActorRepository;
 import me.seondongpyo.videoshop.movie.ui.MovieRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,12 +19,14 @@ import me.seondongpyo.videoshop.movie.domain.MovieRepository;
 class MovieServiceTest {
 
 	private MovieRepository movieRepository;
+	private ActorRepository actorRepository;
 	private MovieService movieService;
 
 	@BeforeEach
 	void setup() {
 		movieRepository = new InMemoryMovieRepository();
-		movieService = new MovieService(movieRepository);
+		actorRepository = new InMemoryActorRepository();
+		movieService = new MovieService(movieRepository, actorRepository);
 	}
 
 	@DisplayName("영화를 등록한다.")
@@ -56,7 +60,7 @@ class MovieServiceTest {
 	@Test
 	void update() {
 		Movie avengers = movieRepository.save(movie("The Avengers", Genre.ACTION));
-		movieService.update(avengers.getId(), new MovieRequestDTO("3 idiots", Genre.COMEDY));
+		movieService.update(avengers.getId(), new MovieRequestDTO("3 idiots", Genre.COMEDY, null));
 
 		Movie found = movieService.findById(avengers.getId());
 		assertThat(found.getTitle()).isEqualTo("3 idiots");

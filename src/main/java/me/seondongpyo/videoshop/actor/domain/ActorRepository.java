@@ -11,4 +11,6 @@ public interface ActorRepository {
 	Optional<Actor> findById(UUID id);
 
 	List<Actor> findAll();
+
+	List<Actor> findAllByIdIn(List<UUID> ids);
 }

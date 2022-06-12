@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import me.seondongpyo.videoshop.actor.domain.Actor;
 import me.seondongpyo.videoshop.actor.domain.ActorRepository;
@@ -28,5 +29,13 @@ public class InMemoryActorRepository implements ActorRepository {
 	@Override
 	public List<Actor> findAll() {
 		return new ArrayList<>(actors.values());
+	}
+
+	@Override
+	public List<Actor> findAllByIdIn(List<UUID> ids) {
+		return actors.values()
+			.stream()
+			.filter(actor -> ids.contains(actor.getId()))
+			.collect(Collectors.toList());
 	}
 }

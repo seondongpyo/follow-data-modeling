@@ -1,8 +1,14 @@
 package me.seondongpyo.videoshop.movie.ui;
 
-import me.seondongpyo.videoshop.movie.application.MovieService;
-import me.seondongpyo.videoshop.movie.domain.Genre;
-import me.seondongpyo.videoshop.movie.domain.Movie;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,15 +17,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import java.util.List;
-import java.util.UUID;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import me.seondongpyo.videoshop.actor.application.ActorService;
+import me.seondongpyo.videoshop.movie.application.MovieService;
+import me.seondongpyo.videoshop.movie.domain.Genre;
+import me.seondongpyo.videoshop.movie.domain.Movie;
 
 @WebMvcTest(MovieAdminController.class)
 class MovieAdminControllerTest {
@@ -29,6 +35,9 @@ class MovieAdminControllerTest {
 
 	@MockBean
 	private MovieService movieService;
+
+	@MockBean
+	private ActorService actorService;
 
 	private Movie threeIdiots;
 	private Movie theRoundup;
@@ -55,10 +64,16 @@ class MovieAdminControllerTest {
 	@DisplayName("새로운 영화를 등록한다.")
 	@Test
 	void add() throws Exception {
+		MultiValueMap<String, String> requests = new LinkedMultiValueMap<>();
+		requests.put("actorId", List.of());
+		requests.put("isLeadRole", List.of());
+
 		mvc.perform(post("/admin/movies")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("title", "드라마")
-				.param("genre", Genre.DRAMA.name()))
+				.param("genre", Genre.DRAMA.name())
+				.param("actorId", UUID.randomUUID().toString(), UUID.randomUUID().toString())
+				.param("isLeadRole", Boolean.TRUE.toString(), Boolean.TRUE.toString()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/admin/movies"));
 	}

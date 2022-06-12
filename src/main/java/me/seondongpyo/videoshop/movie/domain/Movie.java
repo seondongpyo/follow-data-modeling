@@ -2,8 +2,12 @@ package me.seondongpyo.videoshop.movie.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.seondongpyo.videoshop.actor.domain.StarringActor;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,4 +23,7 @@ public class Movie {
 
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
+
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+	private List<StarringActor> starringActors = new ArrayList<>();
 }

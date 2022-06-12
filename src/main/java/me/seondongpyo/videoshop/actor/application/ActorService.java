@@ -1,7 +1,10 @@
 package me.seondongpyo.videoshop.actor.application;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +33,22 @@ public class ActorService {
 	@Transactional(readOnly = true)
 	public List<Actor> findAll() {
 		return actorRepository.findAll();
+	}
+
+	@PostConstruct
+	private void init() {
+		Actor actor = new Actor();
+		actor.setId(UUID.randomUUID());
+		actor.setRealName("Don Lee");
+		actor.setStageName("마동석");
+		actor.setBirthDate(LocalDate.of(1971, 3, 1));
+		actorRepository.save(actor);
+
+		actor = new Actor();
+		actor.setId(UUID.randomUUID());
+		actor.setRealName("윤계상");
+		actor.setStageName("윤계상");
+		actor.setBirthDate(LocalDate.of(1978, 12, 20));
+		actorRepository.save(actor);
 	}
 }

@@ -1,18 +1,28 @@
 package me.seondongpyo.videoshop.movie.ui;
 
-import lombok.RequiredArgsConstructor;
-import me.seondongpyo.videoshop.movie.application.MovieService;
-import me.seondongpyo.videoshop.movie.domain.Genre;
-import me.seondongpyo.videoshop.movie.domain.Movie;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import lombok.RequiredArgsConstructor;
+import me.seondongpyo.videoshop.actor.application.ActorService;
+import me.seondongpyo.videoshop.actor.ui.ActorResponseDTO;
+import me.seondongpyo.videoshop.actor.ui.StarringActorsForm;
+import me.seondongpyo.videoshop.movie.application.MovieService;
+import me.seondongpyo.videoshop.movie.domain.Genre;
+import me.seondongpyo.videoshop.movie.domain.Movie;
 
 @RequiredArgsConstructor
 @RequestMapping("/admin/movies")
@@ -20,6 +30,7 @@ import java.util.stream.Collectors;
 public class MovieAdminController {
 
 	private final MovieService movieService;
+	private final ActorService actorService;
 
 	@ModelAttribute("genres")
 	public List<Genre> genres() {
@@ -47,13 +58,24 @@ public class MovieAdminController {
 
 	@GetMapping("/new")
 	public String addForm(Model model) {
+		List<ActorResponseDTO> actors = actorService.findAll()
+			.stream()
+			.map(ActorResponseDTO::new)
+			.collect(Collectors.toList());
+
 		model.addAttribute("movie", new MovieRequestDTO());
+		model.addAttribute("actors", actors);
 		return "admin/movie/new";
 	}
 
 	@PostMapping
-	public String add(@ModelAttribute MovieRequestDTO request) {
-		movieService.create(request.toEntity());
+	public String add(@ModelAttribute MovieRequestDTO movieRequest,
+					  @RequestParam MultiValueMap<String, Object> starringActorsRequest) {
+
+		StarringActorsForm form = new StarringActorsForm(starringActorsRequest);
+		movieRequest.setStarringActors(form.starringActorRequests());
+
+		movieService.create(movieRequest.toEntity());
 		return "redirect:/admin/movies";
 	}
 
