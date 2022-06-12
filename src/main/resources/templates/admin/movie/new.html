@@ -12,15 +12,64 @@
         <input type="text" name="title" id="title" placeholder="제목">
     </div>
     <div>
-        <label for="genre">장르 :
-            <select name="genre" id="genre">
-                <option th:each="genre : ${genres}" th:text="${genre.description}" th:value="${genre}"></option>
-            </select>
-        </label>
+        <label for="genre">장르 :</label>
+        <select name="genre" id="genre">
+            <option th:each="genre : ${genres}"
+                    th:text="${genre.description}"
+                    th:value="${genre}">
+                장르
+            </option>
+        </select>
+    </div>
+    <div>
+        <label for="actor">배우 :</label>
+        <select id="actor">
+            <option th:each="actor : ${actors}"
+                    th:text="${actor.stageName}"
+                    th:value="${actor.id}">
+                배우
+            </option>
+        </select>
+        <button type="button" onclick="addActor()">추가</button>
+        <div id="actors"></div>
     </div>
     <br>
     <button type="submit">등록</button>
     <a href="/admin/movies">취소</a>
 </form>
 </body>
+<script type="text/javascript">
+    function addActor() {
+        let selectedActor = document.querySelector("#actor > option:checked");
+        let actorId = selectedActor.value;
+        let actorName = selectedActor.text;
+
+        if (document.getElementById(actorId) != null) {
+            alert(`이미 추가된 배우입니다. (이름 : ${actorName})`);
+            return;
+        }
+
+        let actorElement = `
+            <div id="${actorId}">
+                <input type="hidden" name="actorId" value="${actorId}">
+                <span>${actorName}</span>
+                &nbsp;
+                <label>주연 여부 : </label>
+                <select name="hasLeadRole">
+                    <option value="true">주연</option>
+                    <option value="false">조연</option>
+                </select>
+                <button type="button" onclick="removeActor('${actorId}')">삭제</button>
+            </div>
+        `;
+
+        let actors = document.getElementById("actors");
+        actors.insertAdjacentHTML('beforeend', actorElement);
+    }
+
+    function removeActor(actorId) {
+        const actorElement = document.getElementById(actorId);
+        actorElement.parentNode.removeChild(actorElement);
+    }
+</script>
 </html>
