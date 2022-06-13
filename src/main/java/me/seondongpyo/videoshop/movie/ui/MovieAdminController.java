@@ -81,17 +81,27 @@ public class MovieAdminController {
 
 	@GetMapping("/{id}/edit")
 	public String edit(@PathVariable UUID id, Model model) {
+		List<ActorResponseDTO> actors = actorService.findAll()
+			.stream()
+			.map(ActorResponseDTO::new)
+			.collect(Collectors.toList());
+
 		Movie movie = movieService.findById(id);
 		model.addAttribute("movie", new MovieResponseDTO(movie));
+		model.addAttribute("actors", actors);
 		return "admin/movie/edit";
 	}
 
 	@PostMapping("/{id}/edit")
 	public String edit(@PathVariable UUID id,
-					   @ModelAttribute MovieRequestDTO request,
+					   @ModelAttribute MovieRequestDTO movieRequest,
+					   @RequestParam MultiValueMap<String, Object> starringActorsRequest,
 					   RedirectAttributes redirectAttributes) {
 
-		movieService.update(id, request);
+		StarringActorsForm form = new StarringActorsForm(starringActorsRequest);
+		movieRequest.setStarringActors(form.starringActorRequests());
+
+		movieService.update(id, movieRequest);
 		redirectAttributes.addAttribute("id", id);
 		return "redirect:/admin/movies/{id}";
 	}

@@ -1,19 +1,19 @@
 package me.seondongpyo.videoshop.movie.application;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import me.seondongpyo.videoshop.actor.domain.Actor;
 import me.seondongpyo.videoshop.actor.domain.ActorRepository;
 import me.seondongpyo.videoshop.actor.domain.StarringActor;
+import me.seondongpyo.videoshop.actor.ui.StarringActorRequestDTO;
 import me.seondongpyo.videoshop.movie.domain.Movie;
 import me.seondongpyo.videoshop.movie.domain.MovieRepository;
 import me.seondongpyo.videoshop.movie.ui.MovieRequestDTO;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -39,6 +39,7 @@ public class MovieService {
 
 		for (int i = 0; i < starringActors.size(); i++) {
 			StarringActor starringActor = starringActors.get(i);
+			starringActor.setId(UUID.randomUUID());
 			starringActor.setMovie(movie);
 			starringActor.setActor(actors.get(i));
 		}
@@ -63,5 +64,22 @@ public class MovieService {
 
 		movie.setTitle(updateParam.getTitle());
 		movie.setGenre(updateParam.getGenre());
+
+		List<UUID> actorIds = updateParam.getStarringActors()
+			.stream()
+			.map(StarringActorRequestDTO::getActorId)
+			.collect(Collectors.toList());
+
+		List<Actor> actors = actorRepository.findAllByIdIn(actorIds);
+		if (actorIds.size() != actors.size()) {
+			throw new IllegalArgumentException();
+		}
+
+		List<StarringActor> starringActors = movie.getStarringActors();
+		for (int i = 0; i < starringActors.size(); i++) {
+			StarringActor starringActor = starringActors.get(i);
+			starringActor.setActor(actors.get(i));
+			starringActor.setLeadRole(updateParam.getStarringActors().get(i).isLeadRole());
+		}
 	}
 }
