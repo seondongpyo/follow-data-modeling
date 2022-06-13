@@ -21,6 +21,31 @@
             </select>
         </label>
     </div>
+    <div>
+        <label for="actor">배우 :</label>
+        <select id="actor">
+            <option th:each="actor : ${actors}"
+                    th:text="${actor.stageName}"
+                    th:value="${actor.id}">
+                배우
+            </option>
+        </select>
+        <button type="button" onclick="addActor()">추가</button>
+        <div id="actors">
+            <div class="actor" th:each="starringActor : ${movie.starringActors}">
+                <input type="hidden" name="actorId" th:value="${starringActor.actor.id}">
+                <span th:text="${starringActor.actor.stageName}"></span>
+                &nbsp;
+                <label>주연 여부 : </label>
+                <select name="isLeadRole">
+                    <option value="true" th:selected="${starringActor.isLeadRole}">주연</option>
+                    <option value="false" th:selected="!${starringActor.isLeadRole}">조연</option>
+                </select>
+                <button type="button" th:onclick="removeActor(${starringActor.id})">삭제</button>
+            </div>
+        </div>
+    </div>
+    <br>
     <br>
     <button type="submit">수정</button>
     <a th:href="@{/admin/movies}">취소</a>
