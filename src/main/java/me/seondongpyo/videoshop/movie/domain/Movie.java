@@ -3,6 +3,7 @@ package me.seondongpyo.videoshop.movie.domain;
 import lombok.Getter;
 import lombok.Setter;
 import me.seondongpyo.videoshop.actor.domain.StarringActor;
+import me.seondongpyo.videoshop.common.BaseEntity;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class Movie {
+public class Movie extends BaseEntity {
 
 	@Id
 	@Column(name = "id", columnDefinition = "varbinary(16)")

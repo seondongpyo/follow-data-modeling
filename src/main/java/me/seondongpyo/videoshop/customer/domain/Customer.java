@@ -2,6 +2,7 @@ package me.seondongpyo.videoshop.customer.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.seondongpyo.videoshop.common.BaseEntity;
 import me.seondongpyo.videoshop.tape.domain.Tape;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class Customer {
+public class Customer extends BaseEntity {
 
 	@Id
 	@Column(name = "id", columnDefinition = "varbinary(16)")

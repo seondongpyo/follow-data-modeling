@@ -1,22 +1,19 @@
 package me.seondongpyo.videoshop.actor.domain;
 
-import java.time.LocalDate;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
+import me.seondongpyo.videoshop.common.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-public class Actor {
+public class Actor extends BaseEntity {
 
 	@Id
 	@Column(name = "id", columnDefinition = "varbinary(16)")
