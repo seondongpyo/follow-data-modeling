@@ -1,21 +1,5 @@
 package me.seondongpyo.videoshop.movie.ui;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import lombok.RequiredArgsConstructor;
 import me.seondongpyo.videoshop.actor.application.ActorService;
 import me.seondongpyo.videoshop.actor.ui.ActorResponseDTO;
@@ -23,6 +7,16 @@ import me.seondongpyo.videoshop.actor.ui.StarringActorsForm;
 import me.seondongpyo.videoshop.movie.application.MovieService;
 import me.seondongpyo.videoshop.movie.domain.Genre;
 import me.seondongpyo.videoshop.movie.domain.Movie;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("/admin/movies")
@@ -95,11 +89,15 @@ public class MovieAdminController {
 	@PostMapping("/{id}/edit")
 	public String edit(@PathVariable UUID id,
 					   @ModelAttribute MovieRequestDTO movieRequest,
-					   @RequestParam MultiValueMap<String, Object> starringActorsRequest,
+					   @RequestParam(required = false) MultiValueMap<String, Object> starringActorsRequest,
 					   RedirectAttributes redirectAttributes) {
 
-		StarringActorsForm form = new StarringActorsForm(starringActorsRequest);
-		movieRequest.setStarringActors(form.starringActorRequests());
+		List<Object> actorIds = starringActorsRequest.get("actorId");
+
+		if (actorIds != null) {
+			StarringActorsForm form = new StarringActorsForm(starringActorsRequest);
+			movieRequest.setStarringActors(form.starringActorRequests());
+		}
 
 		movieService.update(id, movieRequest);
 		redirectAttributes.addAttribute("id", id);

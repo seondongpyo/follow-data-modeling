@@ -65,21 +65,24 @@ public class MovieService {
 		movie.setTitle(updateParam.getTitle());
 		movie.setGenre(updateParam.getGenre());
 
-		List<UUID> actorIds = updateParam.getStarringActors()
-			.stream()
-			.map(StarringActorRequestDTO::getActorId)
-			.collect(Collectors.toList());
+		List<StarringActorRequestDTO> starringActorRequests = updateParam.getStarringActors();
+		if (starringActorRequests != null) {
+			List<UUID> actorIds = starringActorRequests
+				.stream()
+				.map(StarringActorRequestDTO::getActorId)
+				.collect(Collectors.toList());
 
-		List<Actor> actors = actorRepository.findAllByIdIn(actorIds);
-		if (actorIds.size() != actors.size()) {
-			throw new IllegalArgumentException();
-		}
+			List<Actor> actors = actorRepository.findAllByIdIn(actorIds);
+			if (actorIds.size() != actors.size()) {
+				throw new IllegalArgumentException();
+			}
 
-		List<StarringActor> starringActors = movie.getStarringActors();
-		for (int i = 0; i < starringActors.size(); i++) {
-			StarringActor starringActor = starringActors.get(i);
-			starringActor.setActor(actors.get(i));
-			starringActor.setLeadRole(updateParam.getStarringActors().get(i).isLeadRole());
+			List<StarringActor> starringActors = movie.getStarringActors();
+			for (int i = 0; i < starringActors.size(); i++) {
+				StarringActor starringActor = starringActors.get(i);
+				starringActor.setActor(actors.get(i));
+				starringActor.setLeadRole(starringActorRequests.get(i).isLeadRole());
+			}
 		}
 	}
 }
