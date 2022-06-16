@@ -2,6 +2,7 @@ package me.seondongpyo.videoshop.rental.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import me.seondongpyo.videoshop.common.BaseEntity;
 import me.seondongpyo.videoshop.customer.domain.Customer;
 import me.seondongpyo.videoshop.tape.domain.Tape;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class RentalHistory extends BaseEntity {
