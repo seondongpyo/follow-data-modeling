@@ -20,6 +20,7 @@ public class RentalHistoryService {
         return rentalHistoryRepository.save(rentalHistory);
     }
 
+    @Transactional(readOnly = true)
     public List<RentalHistory> findAllByCustomerId(UUID customerId) {
         return rentalHistoryRepository.findAllByCustomerId(customerId);
     }
