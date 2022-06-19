@@ -1,7 +1,10 @@
 package me.seondongpyo.videoshop.rental.application;
 
+import me.seondongpyo.videoshop.customer.application.InMemoryCustomerRepository;
 import me.seondongpyo.videoshop.customer.domain.Customer;
 import me.seondongpyo.videoshop.rental.domain.RentalHistory;
+import me.seondongpyo.videoshop.rental.ui.RentalHistoryRequestDTO;
+import me.seondongpyo.videoshop.tape.application.InMemoryTapeRepository;
 import me.seondongpyo.videoshop.tape.domain.Tape;
 import me.seondongpyo.videoshop.tape.domain.TapeType;
 import org.junit.jupiter.api.AfterEach;
@@ -18,12 +21,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class RentalHistoryServiceTest {
 
     private InMemoryRentalHistoryRepository rentalHistoryRepository;
+    private InMemoryCustomerRepository customerRepository;
+    private InMemoryTapeRepository tapeRepository;
     private RentalHistoryService rentalHistoryService;
 
     @BeforeEach
     void setup() {
         rentalHistoryRepository = new InMemoryRentalHistoryRepository();
-        rentalHistoryService = new RentalHistoryService(rentalHistoryRepository);
+        customerRepository = new InMemoryCustomerRepository();
+        tapeRepository = new InMemoryTapeRepository();
+        rentalHistoryService = new RentalHistoryService(rentalHistoryRepository, customerRepository, tapeRepository);
     }
 
     @AfterEach
@@ -34,10 +41,13 @@ class RentalHistoryServiceTest {
     @DisplayName("새로운 대여 내역을 등록한다.")
     @Test
     void create() {
-        Customer customer = customer("홍길동");
-        Tape tape = tape(TapeType.VHS);
+        Customer customer = customerRepository.save(customer("홍길동"));
+        Tape tape = tapeRepository.save(tape(TapeType.VHS));
 
-        RentalHistory rentalHistory = rentalHistoryService.create(rentalHistory(customer, tape));
+        RentalHistoryRequestDTO request = new RentalHistoryRequestDTO();
+        request.setTapeId(tape.getId());
+
+        RentalHistory rentalHistory = rentalHistoryService.create(customer.getId(), request);
 
         assertAll(() -> {
             assertThat(rentalHistory.getCustomer().getId()).isEqualTo(customer.getId());
