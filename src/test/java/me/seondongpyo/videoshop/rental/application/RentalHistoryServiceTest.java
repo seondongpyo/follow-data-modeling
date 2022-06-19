@@ -43,9 +43,7 @@ class RentalHistoryServiceTest {
     void create() {
         Customer customer = customerRepository.save(customer("홍길동"));
         Tape tape = tapeRepository.save(tape(TapeType.VHS));
-
-        RentalHistoryRequestDTO request = new RentalHistoryRequestDTO();
-        request.setTapeId(tape.getId());
+        RentalHistoryRequestDTO request = new RentalHistoryRequestDTO(tape.getId());
 
         RentalHistory rentalHistory = rentalHistoryService.create(customer.getId(), request);
 

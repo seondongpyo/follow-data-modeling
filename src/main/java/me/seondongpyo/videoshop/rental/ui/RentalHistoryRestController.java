@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,7 +24,8 @@ public class RentalHistoryRestController {
     public ResponseEntity<RentalHistoryResponseDTO> create(@PathVariable UUID customerId,
                                                            RentalHistoryRequestDTO request) {
         RentalHistory rentalHistory = rentalHistoryService.create(customerId, request);
-        return ResponseEntity.ok(new RentalHistoryResponseDTO(rentalHistory));
+        return ResponseEntity.created(URI.create("/customers/" + customerId + "/rental-histories/" + rentalHistory.getId()))
+            .body(new RentalHistoryResponseDTO(rentalHistory));
     }
 
     @GetMapping("/customers/{customerId}/rental-histories")
